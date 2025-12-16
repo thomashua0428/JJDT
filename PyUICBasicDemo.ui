@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1038</width>
-    <height>627</height>
+    <width>1143</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,15 +29,15 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>511</width>
-      <height>401</height>
+      <width>621</width>
+      <height>471</height>
      </rect>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupInit">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>640</x>
       <y>20</y>
       <width>211</width>
       <height>101</height>
@@ -89,7 +89,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>640</x>
       <y>130</y>
       <width>211</width>
       <height>171</height>
@@ -171,8 +171,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>310</y>
+      <x>640</x>
+      <y>320</y>
       <width>211</width>
       <height>151</height>
      </rect>
@@ -252,8 +252,8 @@
    <widget class="QGroupBox" name="groupLED">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>20</y>
+      <x>870</x>
+      <y>10</y>
       <width>221</width>
       <height>251</height>
      </rect>
@@ -340,9 +340,9 @@
    <widget class="QGroupBox" name="groupPiezo">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>280</y>
-      <width>221</width>
+      <x>870</x>
+      <y>270</y>
+      <width>261</width>
       <height>311</height>
      </rect>
     </property>
@@ -354,7 +354,7 @@
       <rect>
        <x>9</x>
        <y>19</y>
-       <width>201</width>
+       <width>251</width>
        <height>271</height>
       </rect>
      </property>
@@ -386,6 +386,13 @@
          <widget class="Line" name="line_7">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="bnPiezoSetVel">
+          <property name="text">
+           <string>设置速度</string>
           </property>
          </widget>
         </item>
@@ -434,6 +441,9 @@
           </property>
          </widget>
         </item>
+        <item row="3" column="2">
+         <widget class="QLineEdit" name="editPiezoVelVal"/>
+        </item>
         <item row="2" column="2">
          <widget class="QLineEdit" name="editTartgetVal"/>
         </item>
@@ -458,15 +468,12 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="bnPiezoSetVel">
+        <item row="0" column="3">
+         <widget class="QLabel" name="labelPiezoOnTartget">
           <property name="text">
-           <string>设置速度</string>
+           <string>onTartget?</string>
           </property>
          </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLineEdit" name="editPiezoVelVal"/>
         </item>
        </layout>
       </item>

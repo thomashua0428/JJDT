@@ -25,12 +25,7 @@ def LED_scan():
         time.sleep(0.08)
         trigger_once()
         time.sleep(1)
-        ret = obj_cam_operation.SaveRaw(ui.widgetDisplay.winId())
-        if ret != MV_OK:
-            strError = "Save BMP failed ret:" + ToHexStr(ret)
-            QMessageBox.warning(mainWindow, "Error", strError, QMessageBox.Ok)
-        else:
-            print("Save image success, number |{i}")
+
 
 
 
@@ -223,7 +218,6 @@ if __name__ == "__main__":
 
             isOpen = True
             enable_controls()
-            
 
     # ch:开始取流 | en:Start grab image
     def start_grabbing():
@@ -255,8 +249,6 @@ if __name__ == "__main__":
         global isOpen
         global isGrabbing
         global obj_cam_operation
-
-        # stop_grabbing()
 
         if isOpen:
             obj_cam_operation.Close_device()
@@ -297,7 +289,7 @@ if __name__ == "__main__":
 
     # ch:存图 | en:save image
     def save_bmp():
-        ret = obj_cam_operation.SaveRaw(ui.widgetDisplay.winId())
+        ret = obj_cam_operation.Save_Bmp()
         if ret != MV_OK:
             strError = "Save BMP failed ret:" + ToHexStr(ret)
             QMessageBox.warning(mainWindow, "Error", strError, QMessageBox.Ok)
@@ -411,6 +403,7 @@ if __name__ == "__main__":
         ui stage
     """
     ui.labelPiezoCurrentVal.setText("0.0")
+    ui.labelPiezoOnTartget.setStyleSheet("background-color: gray")
     subwidget_Stage = [ui.bnPiezoClose,ui.editPiezoStep,ui.bnPiezoUp,ui.bnPiezoDown 
                        ,ui.cbSVO,ui.bnPiezoGoto,ui.editTartgetVal,ui.bnPiezoSetVel,ui.editPiezoVelVal]
     for widget in subwidget_Stage:
@@ -418,7 +411,7 @@ if __name__ == "__main__":
 
     ui.bnPiezoStart.clicked.connect(Stage.D_stage.open)
     ui.bnPiezoClose.clicked.connect(Stage.D_stage.close)
-    ui.cbSVO.clicked.connect(Stage.D_stage.servo_on)
+    ui.cbSVO.stateChanged.connect(Stage.D_stage.servo_on)
     ui.bnPiezoGoto.clicked.connect(lambda: Stage.D_stage.move_to_target(float(ui.editTartgetVal.text())))
     ui.bnPiezoSetVel.clicked.connect(lambda: Stage.D_stage.set_velocity(float(ui.editPiezoVelVal.text())))
     ui.bnPiezoUp.clicked.connect(lambda: Stage.D_stage.move_relative(1))
@@ -434,11 +427,18 @@ if __name__ == "__main__":
         elif msg == 0:
             for widget in subwidget_Stage:
                 widget.setEnabled(False)
+            
         elif msg == 2:
             for widget in subwidget_Stage:
                 widget.setEnabled(False)
-    def update_stage_position(val):
+            ui.labelPiezoOnTartget.setStyleSheet("background-color: gray")
+
+    def update_stage_position(val, ontarget_flag):
         ui.labelPiezoCurrentVal.setText(f"{val:.3f}")
+        if ontarget_flag:
+            ui.labelPiezoOnTartget.setStyleSheet("background-color: green")
+        else:
+            ui.labelPiezoOnTartget.setStyleSheet("background-color: red")
 
     Stage.D_stage.thread_upload.stage_position_msg.connect(update_stage_position)
     Stage.D_stage.stage_msg.connect(enable_Stage_widgets)

@@ -13,52 +13,6 @@ sys.path.append(os.getenv('MVCAM_COMMON_RUNENV') + "/Samples/Python/MvImport")
 from CameraParams_header import *
 from MvCameraControl_class import *
 
-
-
-HB_format_list = [
-    PixelType_Gvsp_HB_Mono8,
-    PixelType_Gvsp_HB_Mono10,
-    PixelType_Gvsp_HB_Mono10_Packed,
-    PixelType_Gvsp_HB_Mono12,
-    PixelType_Gvsp_HB_Mono12_Packed,
-    PixelType_Gvsp_HB_Mono16,
-    PixelType_Gvsp_HB_BayerGR8,
-    PixelType_Gvsp_HB_BayerRG8,
-    PixelType_Gvsp_HB_BayerGB8,
-    PixelType_Gvsp_HB_BayerBG8,
-    PixelType_Gvsp_HB_BayerRBGG8,
-    PixelType_Gvsp_HB_BayerGR10,
-    PixelType_Gvsp_HB_BayerRG10,
-    PixelType_Gvsp_HB_BayerGB10,
-    PixelType_Gvsp_HB_BayerBG10,
-    PixelType_Gvsp_HB_BayerGR12,
-    PixelType_Gvsp_HB_BayerRG12,
-    PixelType_Gvsp_HB_BayerGB12,
-    PixelType_Gvsp_HB_BayerBG12,
-    PixelType_Gvsp_HB_BayerGR10_Packed,
-    PixelType_Gvsp_HB_BayerRG10_Packed,
-    PixelType_Gvsp_HB_BayerGB10_Packed,
-    PixelType_Gvsp_HB_BayerBG10_Packed,
-    PixelType_Gvsp_HB_BayerGR12_Packed,
-    PixelType_Gvsp_HB_BayerRG12_Packed,
-    PixelType_Gvsp_HB_BayerGB12_Packed,
-    PixelType_Gvsp_HB_BayerBG12_Packed,
-    PixelType_Gvsp_HB_YUV422_Packed,
-    PixelType_Gvsp_HB_YUV422_YUYV_Packed,
-    PixelType_Gvsp_HB_RGB8_Packed,
-    PixelType_Gvsp_HB_BGR8_Packed,
-    PixelType_Gvsp_HB_RGBA8_Packed,
-    PixelType_Gvsp_HB_BGRA8_Packed,
-    PixelType_Gvsp_HB_RGB16_Packed,
-    PixelType_Gvsp_HB_BGR16_Packed,
-    PixelType_Gvsp_HB_RGBA16_Packed,
-    PixelType_Gvsp_HB_BGRA16_Packed]
-
-
-
-
-
-
 # 强制关闭线程
 def Async_raise(tid, exctype):
     tid = ctypes.c_long(tid)
@@ -190,12 +144,6 @@ class CameraOperation:
             ret = self.obj_cam.MV_CC_SetEnumValue("TriggerMode", MV_TRIGGER_MODE_OFF)
             if ret != 0:
                 print("set trigger mode fail! ret[0x%x]" % ret)
-
-            # 设置像素格式
-            a = int(0x01100005)
-            stEnumValue = a
-            self.obj_cam.MV_CC_SetEnumValue("PixelFormat", int(stEnumValue))
-
             return MV_OK
 
     # 开始取图
@@ -207,13 +155,13 @@ class CameraOperation:
                 return ret
             self.b_start_grabbing = True
             print("start grabbing successfully!")
-            # try:
-            #     thread_id = random.randint(1, 10000)
-            #     self.h_thread_handle = threading.Thread(target=CameraOperation.Work_thread, args=(self, winHandle))
-            #     self.h_thread_handle.start()
-            #     self.b_thread_closed = True
-            # finally:
-            #     pass
+            try:
+                thread_id = random.randint(1, 10000)
+                self.h_thread_handle = threading.Thread(target=CameraOperation.Work_thread, args=(self, winHandle))
+                self.h_thread_handle.start()
+                self.b_thread_closed = True
+            finally:
+                pass
             return MV_OK
 
         return MV_E_CALLORDER
@@ -360,7 +308,7 @@ class CameraOperation:
                 # 释放缓存
                 self.obj_cam.MV_CC_FreeImageBuffer(stOutFrame)
             else:
-                print("no data,, ret = " + To_hex_str(ret))
+                print("no data, ret = " + To_hex_str(ret))
                 continue
 
             # 使用Display接口显示图像
@@ -405,101 +353,6 @@ class CameraOperation:
 
         self.buf_lock.release()
         return ret
-    def save_raw(self,frame_info, cam_instance):
-        if frame_info.stFrameInfo.enPixelType in HB_format_list:
-
-            # ch:解码参数 | en: decode parameters
-            stDecodeParam = MV_CC_HB_DECODE_PARAM()
-            memset(byref(stDecodeParam), 0, sizeof(stDecodeParam))
-
-            # 获取数据包大小
-            stParam = MVCC_INTVALUE()
-            memset(byref(stParam), 0, sizeof(stParam))
-
-            ret = cam_instance.MV_CC_GetIntValue("PayloadSize", stParam)
-            if 0 != ret:
-                print("Get PayloadSize fail! ret[0x%x]" % ret)
-                return ret
-            nPayloadSize = stParam.nCurValue
-            stDecodeParam.pSrcBuf = frame_info.pBufAddr
-            stDecodeParam.nSrcLen = frame_info.stFrameInfo.nFrameLen
-            stDecodeParam.pDstBuf = (c_ubyte * nPayloadSize)()
-            stDecodeParam.nDstBufSize = nPayloadSize
-            ret = cam.MV_CC_HBDecode(stDecodeParam)
-            if ret != 0:
-                print("HB Decode fail! ret[0x%x]" % ret)
-                return ret
-            else:
-                file_path = "Image_w%d_h%d_fn%d.raw" % (stDecodeParam.nWidth, stDecodeParam.nHeight,
-                                                        stOutFrame.stFrameInfo.nFrameNum)
-                try:
-                    file_open = open(file_path.encode('ascii'), 'wb+')
-                    img_save = (c_ubyte * stDecodeParam.nDstBufLen)()
-                    memmove(byref(img_save), stDecodeParam.pDstBuf, stDecodeParam.nDstBufLen)
-                    file_open.write(img_save)
-                except PermissionError:
-                    file_open.close()
-                    print("save error raw file executed failed!")
-                    return MV_E_OPENFILE
-                file_open.close()
-        else:
-            file_path = "Image_w%d_h%d_fn%d.raw" % (
-                frame_info.stFrameInfo.nWidth, frame_info.stFrameInfo.nHeight, frame_info.stFrameInfo.nFrameNum)
-            try:
-                file_open = open(file_path.encode('ascii'), 'wb+')
-                img_save = (c_ubyte * frame_info.stFrameInfo.nFrameLen)()
-                memmove(byref(img_save), frame_info.pBufAddr, frame_info.stFrameInfo.nFrameLen)
-                file_open.write(img_save)
-            except PermissionError:
-                file_open.close()
-                print("save error raw file executed failed!")
-                return MV_E_OPENFILE
-            file_open.close()
-        return 0
-
-
-    def SaveRaw(self,winHandle):
-        
-        stOutFrame = MV_FRAME_OUT()
-        memset(byref(stOutFrame), 0, sizeof(stOutFrame))
-        ret = self.obj_cam.MV_CC_GetImageBuffer(stOutFrame, 1000)
-        if 0 == ret:
-
-            # 拷贝图像和图像信息
-            # 获取缓存锁
-            self.buf_lock.acquire()
-            if self.buf_save_image_len < stOutFrame.stFrameInfo.nFrameLen:
-                if self.buf_save_image is not None:
-                    del self.buf_save_image
-                    self.buf_save_image = None
-                self.buf_save_image = (c_ubyte * stOutFrame.stFrameInfo.nFrameLen)()
-                self.buf_save_image_len = stOutFrame.stFrameInfo.nFrameLen
-
-            cdll.msvcrt.memcpy(byref(self.st_frame_info), byref(stOutFrame.stFrameInfo), sizeof(MV_FRAME_OUT_INFO_EX))
-            cdll.msvcrt.memcpy(byref(self.buf_save_image), stOutFrame.pBufAddr, self.st_frame_info.nFrameLen)
-            self.buf_lock.release()
-
-            print("save _raw get one frame: Width[%d], Height[%d], nFrameNum[%d]"
-                    % (self.st_frame_info.nWidth, self.st_frame_info.nHeight, self.st_frame_info.nFrameNum))
-            # 释放缓存
-            self.obj_cam.MV_CC_FreeImageBuffer(stOutFrame)
-            self.save_raw(stOutFrame, self.obj_cam)
-
-            # stDisplayParam = MV_DISPLAY_FRAME_INFO()
-            # memset(byref(stDisplayParam), 0, sizeof(stDisplayParam))
-            # stDisplayParam.hWnd = int(winHandle)
-            # stDisplayParam.nWidth = self.st_frame_info.nWidth
-            # stDisplayParam.nHeight = self.st_frame_info.nHeight
-            # stDisplayParam.enPixelType = self.st_frame_info.enPixelType
-            # stDisplayParam.pData = self.buf_save_image
-            # stDisplayParam.nDataLen = self.st_frame_info.nFrameLen
-            # self.obj_cam.MV_CC_DisplayOneFrame(stDisplayParam)
-
-        else:
-            print("no data, ret = " + To_hex_str(ret))
-
-        return ret
-
 
     # 存BMP图像
     def Save_Bmp(self):
