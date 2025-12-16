@@ -10,6 +10,7 @@ import ctypes
 
 
 import illumaination
+import Stage
 import time
 import os
 def LED_scan():
@@ -357,7 +358,6 @@ if __name__ == "__main__":
         ui.bnSoftwareTrigger.setEnabled(isGrabbing and ui.radioTriggerMode.isChecked())
 
         ui.bnSaveImage.setEnabled(isOpen and isGrabbing)
-        ui.bnSaveImage_2.setEnabled(isOpen and isGrabbing)
 
     # ch: 初始化app, 绑定控件与函数 | en: Init app, bind ui and api
     app = QApplication(sys.argv)
@@ -378,7 +378,79 @@ if __name__ == "__main__":
     ui.bnSetParam.clicked.connect(set_param)
 
     ui.bnSaveImage.clicked.connect(save_bmp)
-    ui.bnSaveImage_2.clicked.connect(LED_scan)
+
+
+
+    """ 
+        ui LED
+    """
+    ui.bnLEDStart.clicked.connect(illumaination.illumination_D.open)
+    ui.bnLEDClear.clicked.connect(illumaination.illumination_D.clear)
+    ui.bnLEDLit.clicked.connect(lambda: illumaination.illumination_D.illumination_at(0, int(ui.editLEDId.text())))
+    ui.bnLEDClose.clicked.connect(illumaination.illumination_D.close)
+
+    subwidget_LED = [ui.bnLEDClear, ui.bnLEDLit,ui.editLEDId,ui.bnLEDClose]
+    for widget in subwidget_LED:
+        widget.setEnabled(False)
+    # if LED opend successfully, enable these widgets
+    def enable_LED_widgets(msg):
+
+        if msg == 1:
+            for widget in subwidget_LED:
+                widget.setEnabled(True)
+        elif msg == 0:
+            for widget in subwidget_LED:
+                widget.setEnabled(False)
+        elif msg == 2:
+            for widget in subwidget_LED:
+                widget.setEnabled(False)
+
+    illumaination.illumination_D.illumination_msg.connect(enable_LED_widgets)
+
+    """ 
+        ui stage
+    """
+    ui.labelPiezoCurrentVal.setText("0.0")
+    subwidget_Stage = [ui.bnPiezoClose,ui.editPiezoStep,ui.bnPiezoUp,ui.bnPiezoDown 
+                       ,ui.cbSVO,ui.bnPiezoGoto,ui.editTartgetVal,ui.bnPiezoSetVel,ui.editPiezoVelVal]
+    for widget in subwidget_Stage:
+        widget.setEnabled(False)
+
+    ui.bnPiezoStart.clicked.connect(Stage.D_stage.open)
+    ui.bnPiezoClose.clicked.connect(Stage.D_stage.close)
+    ui.cbSVO.clicked.connect(Stage.D_stage.servo_on)
+    ui.bnPiezoGoto.clicked.connect(lambda: Stage.D_stage.move_to_target(float(ui.editTartgetVal.text())))
+    ui.bnPiezoSetVel.clicked.connect(lambda: Stage.D_stage.set_velocity(float(ui.editPiezoVelVal.text())))
+    ui.bnPiezoUp.clicked.connect(lambda: Stage.D_stage.move_relative(1))
+    ui.bnPiezoDown.clicked.connect(lambda: Stage.D_stage.move_relative(-1))
+    ui.editPiezoStep.textChanged.connect(lambda: Stage.D_stage.set_step(float(ui.editPiezoStep.text())))
+    # if stage opend successfully, enable these widgets
+
+    def enable_Stage_widgets(msg):
+
+        if msg == 1:
+            for widget in subwidget_Stage:
+                widget.setEnabled(True)
+        elif msg == 0:
+            for widget in subwidget_Stage:
+                widget.setEnabled(False)
+        elif msg == 2:
+            for widget in subwidget_Stage:
+                widget.setEnabled(False)
+    def update_stage_position(val):
+        ui.labelPiezoCurrentVal.setText(f"{val:.3f}")
+
+    Stage.D_stage.thread_upload.stage_position_msg.connect(update_stage_position)
+    Stage.D_stage.stage_msg.connect(enable_Stage_widgets)
+    Stage.D_stage.velocity_msg.connect(lambda vel: ui.editPiezoVelVal.setText(f"{vel:.4f}"))
+    Stage.D_stage.step_msg.connect(lambda step: ui.editPiezoStep.setText(f"{step:.4f}"))
+
+
+
+
+
+
+
 
     mainWindow.show()
 
@@ -389,7 +461,7 @@ if __name__ == "__main__":
     # ch:反初始化SDK | en: finalize SDK
     MvCamera.MV_CC_Finalize()
 
-    
 
 
     sys.exit()
+    Stage.D_stage.close(None)
