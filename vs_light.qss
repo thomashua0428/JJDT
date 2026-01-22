@@ -1,0 +1,158 @@
+/* ================================================
+   VS Studio Light Theme for PyQt5
+   文件名: vs_light.qss
+   ================================================ */
+
+/* --- 全局字体与背景 --- */
+QWidget {
+    background-color: #F0F0F0; /* 整体背景灰 */
+    color: #333333;            /* 字体深灰 */
+    font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+    font-size: 9pt;
+}
+
+/* --- 主显示区域 (黑色背景) --- */
+/* 必须确保你在代码中设置了 objectName 为 widgetDisplay */
+#widgetDisplay {
+    background-color: #000000;
+    border: 2px solid #555555;
+}
+
+/* --- 分组框 (卡片式设计) --- */
+QGroupBox {
+    background-color: #FFFFFF; /* 内容区域白色 */
+    border: 1px solid #CCCCCC;
+    border-radius: 2px;
+    margin-top: 10px; /* 为标题留出空间 */
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px;
+    background-color: transparent;
+    color: #007ACC; /* 标题使用 VS 蓝 */
+    font-weight: bold;
+}
+
+/* --- 按钮 (扁平化 + 交互反馈) --- */
+QPushButton {
+    background-color: #E1E1E1; /* 默认浅灰 */
+    border: 1px solid #ADADAD;
+    border-radius: 0px;        /* VS 风格通常是直角 */
+    padding: 5px 15px;
+    min-height: 22px;
+}
+
+QPushButton:hover {
+    background-color: #E5F1FB; /* 悬停浅蓝 */
+    border: 1px solid #007ACC; /* 边框变蓝 */
+}
+
+QPushButton:pressed {
+    background-color: #CCE4F7; /* 按下深一点的蓝 */
+    border: 1px solid #005A9E;
+}
+
+QPushButton:disabled {
+    background-color: #F0F0F0;
+    border: 1px solid #D0D0D0;
+    color: #A0A0A0;
+}
+
+/* --- 输入框 --- */
+QLineEdit, QSpinBox {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 3px;
+    selection-background-color: #007ACC;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus, QSpinBox:focus {
+    border: 1px solid #007ACC; /* 聚焦时边框变蓝 */
+}
+
+QLineEdit:disabled {
+    background-color: #F0F0F0;
+    color: #A0A0A0;
+}
+
+/* --- 下拉框 --- */
+QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 3px;
+}
+
+QComboBox:on { /* 下拉时 */
+    border-color: #007ACC;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #CCCCCC;
+    border-left-style: solid;
+    background-color: #F7F7F7;
+}
+
+QComboBox::down-arrow {
+    /* 这里用纯CSS画一个小箭头，避免依赖图片 */
+    image: none;
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+    border-top: 5px solid #666666; 
+    width: 0;
+    height: 0;
+    margin-top: 2px;
+    margin-right: 2px;
+}
+
+/* --- 单选框与复选框 --- */
+QRadioButton::indicator, QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QRadioButton::indicator:unchecked, QCheckBox::indicator:unchecked {
+    border: 1px solid #999999;
+    background-color: #FFFFFF;
+}
+
+QRadioButton::indicator:checked, QCheckBox::indicator:checked {
+    border: 1px solid #007ACC;
+    background-color: #007ACC;
+}
+
+QRadioButton::indicator:hover, QCheckBox::indicator:hover {
+    border: 1px solid #007ACC;
+}
+
+/* --- 状态栏 --- */
+QStatusBar {
+    background-color: #007ACC; /* 底部通栏蓝 */
+    color: #FFFFFF;
+}
+
+QStatusBar::item {
+    border: none;
+}
+
+/* --- 滚动条 (垂直) --- */
+QScrollBar:vertical {
+    border: none;
+    background: #F0F0F0;
+    width: 10px;
+    margin: 0px 0px 0px 0px;
+}
+QScrollBar::handle:vertical {
+    background: #CDCDCD;
+    min-height: 20px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #A6A6A6;
+}

@@ -2,7 +2,7 @@
 import serial
 import time
 from PyQt5.QtCore import pyqtSignal,QObject  # 导入自定义信号类
-
+import pickle
 
 
 ILLUMINATION_PROMPT = "### ILLUMINATION info ###  \n"
@@ -37,6 +37,7 @@ class IlluminationDevice(QObject):
 
     illumination_msg = pyqtSignal(int)
 
+    scan_ready_msg = pyqtSignal(bool)
     def __init__(self):
         super().__init__()
 
@@ -49,7 +50,7 @@ class IlluminationDevice(QObject):
         
         """
         self.state = None
-
+        self.scan_params = None
     def open(self, __, port = "COM3", baudrate=115200):
         if self.state is not None :
             print(ILLUMINATION_PROMPT + "Serial port is already open.")
@@ -100,6 +101,16 @@ class IlluminationDevice(QObject):
 
             print(ILLUMINATION_PROMPT + "Serial port closed.")
 
+    def start_scan(self):
+        self.scan_ct = 0
+        self.scan_params = list(self.scan_params)
+        self.scan_ready_msg.emit(True)
+
+    def scan_sync(self):
+        LED_id = self.scan_params[self.scan_ct]
+        self.illumination_at(0, LED_id)
+        self.scan_ct = (self.scan_ct + 1)% len(self.scan_params)
+        
 
 illumination_D =  IlluminationDevice()
 

@@ -12,7 +12,7 @@ sys.path.append(os.getenv('MVCAM_COMMON_RUNENV') + "/Samples/Python/MvImport")
 
 from CameraParams_header import *
 from MvCameraControl_class import *
-
+from PyQt5.QtCore import  pyqtSignal ,QObject
 # 强制关闭线程
 def Async_raise(tid, exctype):
     tid = ctypes.c_long(tid)
@@ -74,13 +74,15 @@ def Is_color_data(enGvspPixelType):
 
 
 # 相机操作类
-class CameraOperation:
+class CameraOperation(QObject):
 
     def __init__(self, obj_cam, st_device_list, n_connect_num=0, b_open_device=False, b_start_grabbing=False,
                  h_thread_handle=None,
                  b_thread_closed=False, st_frame_info=None, b_exit=False, b_save_bmp=False, b_save_jpg=False,
                  buf_save_image=None,
                  n_save_image_size=0, n_win_gui_id=0, frame_rate=0, exposure_time=0, gain=0):
+
+        super().__init__()
 
         self.obj_cam = obj_cam
         self.st_device_list = st_device_list
@@ -286,7 +288,7 @@ class CameraOperation:
         memset(byref(stOutFrame), 0, sizeof(stOutFrame))
 
         while True:
-            ret = self.obj_cam.MV_CC_GetImageBuffer(stOutFrame, 1000)
+            ret = self.obj_cam.MV_CC_GetImageBuffer(stOutFrame, 10000)
             if 0 == ret:
 
                 # 拷贝图像和图像信息
@@ -302,11 +304,19 @@ class CameraOperation:
                 cdll.msvcrt.memcpy(byref(self.st_frame_info), byref(stOutFrame.stFrameInfo), sizeof(MV_FRAME_OUT_INFO_EX))
                 cdll.msvcrt.memcpy(byref(self.buf_save_image), stOutFrame.pBufAddr, self.st_frame_info.nFrameLen)
                 self.buf_lock.release()
-
+                
                 print("get one frame: Width[%d], Height[%d], nFrameNum[%d]"
                       % (self.st_frame_info.nWidth, self.st_frame_info.nHeight, self.st_frame_info.nFrameNum))
                 # 释放缓存
                 self.obj_cam.MV_CC_FreeImageBuffer(stOutFrame)
+
+            ################################
+                if self.sync_trigger_flag:
+                    self.sync_trigger_flag = False
+                    self.Save_Bmp(self.file_path)
+                    self.sync_ack_msg.emit()
+
+            ################################
             else:
                 print("no data, ret = " + To_hex_str(ret))
                 continue
@@ -355,7 +365,7 @@ class CameraOperation:
         return ret
 
     # 存BMP图像
-    def Save_Bmp(self):
+    def Save_Bmp(self,pth):
 
         if 0 == self.buf_save_image:
             return
@@ -363,7 +373,7 @@ class CameraOperation:
         # 获取缓存锁
         self.buf_lock.acquire()
 
-        file_path = str(self.st_frame_info.nFrameNum) + ".bmp"
+        file_path = pth + ".bmp"
         c_file_path = file_path.encode('ascii')
 
         stSaveParam = MV_SAVE_IMAGE_TO_FILE_PARAM_EX()
@@ -381,3 +391,12 @@ class CameraOperation:
 
         return ret
 
+#####################################################################################
+    sync_trigger_flag = False
+    
+    sync_ack_msg = pyqtSignal()
+    
+    def scan_sync(self,pth):
+        self.file_path = pth
+        self.Trigger_once()
+        self.sync_trigger_flag = True

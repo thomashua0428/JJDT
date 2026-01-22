@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1143</width>
-    <height>660</height>
+    <width>1449</width>
+    <height>895</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>511</width>
+      <width>661</width>
       <height>22</height>
      </rect>
     </property>
@@ -29,22 +29,22 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>621</width>
-      <height>471</height>
+      <width>831</width>
+      <height>551</height>
      </rect>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupInit">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>20</y>
+      <x>10</x>
+      <y>630</y>
       <width>211</width>
       <height>101</height>
      </rect>
     </property>
     <property name="title">
-     <string>初始化</string>
+     <string>相机初始化</string>
     </property>
     <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
@@ -89,14 +89,14 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>130</y>
+      <x>460</x>
+      <y>620</y>
       <width>211</width>
       <height>171</height>
      </rect>
     </property>
     <property name="title">
-     <string>采集</string>
+     <string>相机采集</string>
     </property>
     <widget class="QWidget" name="gridLayoutWidget_2">
      <property name="geometry">
@@ -171,14 +171,14 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>320</y>
+      <x>230</x>
+      <y>630</y>
       <width>211</width>
       <height>151</height>
      </rect>
     </property>
     <property name="title">
-     <string>参数</string>
+     <string>相机参数</string>
     </property>
     <widget class="QWidget" name="gridLayoutWidget_3">
      <property name="geometry">
@@ -340,8 +340,8 @@
    <widget class="QGroupBox" name="groupPiezo">
     <property name="geometry">
      <rect>
-      <x>870</x>
-      <y>270</y>
+      <x>830</x>
+      <y>300</y>
       <width>261</width>
       <height>311</height>
      </rect>
@@ -476,6 +476,388 @@
          </widget>
         </item>
        </layout>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupScanControl">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>620</y>
+      <width>221</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>联合扫描控制</string>
+    </property>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>691</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QGroupBox" name="groupLEDConfig">
+        <property name="title">
+         <string>LED 配置</string>
+        </property>
+        <widget class="QPushButton" name="bnLEDSelector">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>80</y>
+           <width>75</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>点阵选择器</string>
+         </property>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>1099</x>
+      <y>10</y>
+      <width>201</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>步进电机</string>
+    </property>
+    <widget class="QWidget" name="verticalLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>20</y>
+       <width>191</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QPushButton" name="bnMotorStart">
+        <property name="text">
+         <string>步进电机连接</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="1" column="1">
+         <widget class="QPushButton" name="bnMotorCCWStep">
+          <property name="text">
+           <string>CCW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QPushButton" name="bnMotorClose">
+          <property name="text">
+           <string>关闭</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="bnMotorStep">
+          <property name="text">
+           <string>步进</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="bnMotorCWStep">
+          <property name="text">
+           <string>CW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="cbMotorServo">
+          <property name="text">
+           <string>开启伺服</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="bnMotorClearAlarm">
+          <property name="text">
+           <string>ALARM RESET</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="editMotorStep"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupPiezoConfig">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>290</y>
+      <width>341</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>位移台配置</string>
+    </property>
+    <widget class="QWidget" name="gridLayoutWidget_7">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>331</width>
+       <height>442</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="5" column="3">
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="text">
+         <string>-5000</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="3">
+       <widget class="QPushButton" name="bnScanAbort">
+        <property name="text">
+         <string>终止</string>
+        </property>
+       </widget>
+      </item>
+      <item row="23" column="0">
+       <widget class="QLabel" name="label_20">
+        <property name="text">
+         <string>6</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>层切增益</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QLineEdit" name="editScanStep">
+        <property name="text">
+         <string>40</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="editScanExposure2">
+        <property name="text">
+         <string>160000</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>斜照明增益</string>
+        </property>
+       </widget>
+      </item>
+      <item row="19" column="1">
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>斜照明扫描（取背景）</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLineEdit" name="editScanGain1">
+        <property name="text">
+         <string>2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QLineEdit" name="editScanStepNum">
+        <property name="text">
+         <string>600</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>步进回</string>
+        </property>
+       </widget>
+      </item>
+      <item row="18" column="1">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>↓取背景</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="1">
+       <widget class="QPushButton" name="bnScanStart">
+        <property name="text">
+         <string>层切扫描</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>↓</string>
+        </property>
+       </widget>
+      </item>
+      <item row="19" column="0">
+       <widget class="QLabel" name="label_18">
+        <property name="text">
+         <string>4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="21" column="1">
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>步进回</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="QPushButton" name="bnScanAbort2">
+        <property name="text">
+         <string>终止2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>层切曝光</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>步进回</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>每一次层切步长</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QPushButton" name="bnScanStart2">
+        <property name="text">
+         <string>斜照明扫描</string>
+        </property>
+       </widget>
+      </item>
+      <item row="20" column="1">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>↓</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>1      </string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QLineEdit" name="editScanExposure1">
+        <property name="text">
+         <string>80000</string>
+        </property>
+       </widget>
+      </item>
+      <item row="21" column="0">
+       <widget class="QLabel" name="label_19">
+        <property name="text">
+         <string>5</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>斜照明曝光</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>↓</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>层切数量</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLineEdit" name="editScanGain2">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="23" column="1">
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="text">
+         <string>层切扫描（取背景）</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="0">
+       <widget class="QLabel" name="label_17">
+        <property name="text">
+         <string>3</string>
+        </property>
+       </widget>
+      </item>
+      <item row="22" column="1">
+       <widget class="QLabel" name="label_21">
+        <property name="text">
+         <string>↓</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

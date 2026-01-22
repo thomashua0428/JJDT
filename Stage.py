@@ -21,6 +21,10 @@ class StageDevice(QObject):
     velocity_msg = pyqtSignal(float)
 
     step_msg = pyqtSignal(float)
+
+    scan_ready_msg = pyqtSignal(bool)
+
+    sync_ack_msg = pyqtSignal()
     def __init__(self):
         super().__init__()
 
@@ -36,6 +40,9 @@ class StageDevice(QObject):
         self.velocity = 0.0
         self.axis = '1' 
 
+
+        self.scan_params = None
+
         self.thread_upload = StageThread(self)
         self.thread_upload.start()
 
@@ -49,17 +56,17 @@ class StageDevice(QObject):
                 pidevice.InterfaceSetupDlg()
                 print('connected: {}'.format(pidevice.qIDN().strip()))
                 self.handler = pidevice
-                self.state = 1
+                self.state = STATE_IDLE
                 self.velocity = self.get_velocity()
                 self.set_step(0.1)
 
                 self.stage_msg.emit(1)
-
+            
             except Exception as e:
                 print("Error connecting to stage:", e)
                 self.stage_msg.emit(0)
     def close(self,__):
-        if self.handler is not None:
+        if self.state is not STATE_NONE:
             try:
                 self.handler.CloseConnection()
                 self.handler = None
@@ -73,7 +80,7 @@ class StageDevice(QObject):
 
 
     def servo_on(self,state):
-        if self.state is not STATE_NONE:
+        if self.state is STATE_IDLE:
             try:
                 if state == 0:
                     self.handler.SVO('1', 0)
@@ -83,7 +90,7 @@ class StageDevice(QObject):
                 print("Error turning on stage servo:", e)
 
     def move_to_target(self, target_pos):
-        if self.state is not STATE_NONE:
+        if self.state is STATE_IDLE:
             # Set state to BUSY
             self.state = STATE_BUSY
             
@@ -153,6 +160,32 @@ class StageDevice(QObject):
                 self.move_thread.start()
             except Exception as e:
                 print("Error moving stage relatively:", e)
+
+    def start_scan(self,params):
+        self.scan_params = params
+        
+        if self.state is STATE_IDLE :
+            self.state = STATE_BUSY
+            self.scan_ready_msg.emit(True)
+            print("Stage is ready to scan.")
+        else:
+            self.state = self.state
+            self.scan_ready_msg.emit(False)
+            print("Stage is not ready to scan.")
+
+    def scan_complete(self):
+        if self.state is STATE_BUSY:
+            self.state = STATE_IDLE
+            print("Stage scan complete, back to idle.")
+
+    def scan_sync(self):
+        if self.state is STATE_BUSY:
+            self.move_thread = MoveWaitThread(self, self.scan_params[0], 'MVR')
+            self.move_thread.finished_signal.connect(self.sync_ack)
+            self.move_thread.start()
+    def sync_ack(self):
+        if self.state is STATE_BUSY:
+            self.sync_ack_msg.emit()
 
 
 ### define a thread to update stage position

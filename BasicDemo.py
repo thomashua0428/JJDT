@@ -11,8 +11,13 @@ import ctypes
 
 import illumaination
 import Stage
+import ScanControl
+import LED_Selector
+import StageMotor
+
 import time
 import os
+import pickle
 def LED_scan():
     # delete all bmp files  4004278.0000
         
@@ -218,6 +223,7 @@ if __name__ == "__main__":
 
             isOpen = True
             enable_controls()
+        ScanControl.scan_D.load_cam_handler(obj_cam_operation)
 
     # ch:开始取流 | en:Start grab image
     def start_grabbing():
@@ -353,6 +359,19 @@ if __name__ == "__main__":
 
     # ch: 初始化app, 绑定控件与函数 | en: Init app, bind ui and api
     app = QApplication(sys.argv)
+
+    # try:
+    #     with open("vs_light.qss", "r", encoding="utf-8") as f:
+    #         qss_style = f.read()
+    #         app.setStyleSheet(qss_style)
+    #         # 设置 Fusion 风格以确保跨平台一致性 (Windows/Linux/Mac)
+    #         app.setStyle("Fusion") 
+    #         print("样式表加载成功")
+    # except FileNotFoundError:
+    #     print("警告: 未找到 vs_light.qss 文件，将使用默认样式")
+    # except Exception as e:
+    #     print(f"样式加载出错: {e}")
+
     mainWindow = QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(mainWindow)
@@ -376,12 +395,7 @@ if __name__ == "__main__":
     """ 
         ui LED
     """
-    ui.bnLEDStart.clicked.connect(illumaination.illumination_D.open)
-    ui.bnLEDClear.clicked.connect(illumaination.illumination_D.clear)
-    ui.bnLEDLit.clicked.connect(lambda: illumaination.illumination_D.illumination_at(0, int(ui.editLEDId.text())))
-    ui.bnLEDClose.clicked.connect(illumaination.illumination_D.close)
-
-    subwidget_LED = [ui.bnLEDClear, ui.bnLEDLit,ui.editLEDId,ui.bnLEDClose]
+    subwidget_LED = [ui.bnLEDClear, ui.bnLEDLit,ui.editLEDId,ui.bnLEDClose,ui.bnLEDSelector]
     for widget in subwidget_LED:
         widget.setEnabled(False)
     # if LED opend successfully, enable these widgets
@@ -396,9 +410,33 @@ if __name__ == "__main__":
         elif msg == 2:
             for widget in subwidget_LED:
                 widget.setEnabled(False)
+    LED_selector = None
+    
+    def bnLEDSelector_click():
+        global LED_selector
+        if LED_selector is None:
+            LED_selector = LED_Selector.LED_Selector()
+        
+        # 显示窗口
+        LED_selector.show()
+        
+        # --- 关键点 3: 窗口激活 ---
+        # 如果窗口已经被打开但被挡在后面，或者最小化了，这就把它拉到最前面并恢复正常大小
+        LED_selector.raise_()
+        LED_selector.activateWindow()
+        
+        # 如果是最小化状态，恢复它
+        if LED_selector.isMinimized():
+            LED_selector.showNormal()
+    
+    ui.bnLEDStart.clicked.connect(illumaination.illumination_D.open)
+    ui.bnLEDClear.clicked.connect(illumaination.illumination_D.clear)
+    ui.bnLEDLit.clicked.connect(lambda: illumaination.illumination_D.illumination_at(0, int(ui.editLEDId.text())))
+    ui.bnLEDClose.clicked.connect(illumaination.illumination_D.close)
+    ui.bnLEDSelector.clicked.connect(bnLEDSelector_click)
 
     illumaination.illumination_D.illumination_msg.connect(enable_LED_widgets)
-
+    illumaination.illumination_D.scan_ready_msg.connect(lambda ready: ScanControl.scan_D.set_LED_ready(ready))
     """ 
         ui stage
     """
@@ -444,6 +482,67 @@ if __name__ == "__main__":
     Stage.D_stage.stage_msg.connect(enable_Stage_widgets)
     Stage.D_stage.velocity_msg.connect(lambda vel: ui.editPiezoVelVal.setText(f"{vel:.4f}"))
     Stage.D_stage.step_msg.connect(lambda step: ui.editPiezoStep.setText(f"{step:.4f}"))
+
+    """ 
+        ui stage motor
+    """
+
+    ui.bnMotorStart.clicked.connect(StageMotor.stageMotor_D.open)
+    ui.bnMotorClose.clicked.connect(StageMotor.stageMotor_D.close)
+    
+    ui.bnMotorCWStep.clicked.connect(StageMotor.stageMotor_D.move_cw_step)
+    ui.bnMotorCCWStep.clicked.connect(StageMotor.stageMotor_D.move_ccw_step)
+
+    ui.cbMotorServo.stateChanged.connect(StageMotor.stageMotor_D.servo)
+
+    ui.bnMotorStep.clicked.connect(StageMotor.stageMotor_D.move)
+    ui.editMotorStep.textChanged.connect(lambda: StageMotor.stageMotor_D.set_step(int(ui.editMotorStep.text())))
+    """ 
+        ui scan control
+    """
+    ui.editScanStepNum.setText("10")
+    ui.editScanStep.setText("1")
+    ui.bnScanAbort.setEnabled(False)
+
+    def bcScanStart_clicked():
+
+        LED_list = pickle.load(open("led_pattern1.pkl", "rb"))
+        illumaination.illumination_D.scan_params = LED_list
+        ScanControl.scan_D.load_params1(
+        float(ui.editScanStep.text()),float(ui.editScanStepNum.text()),len(LED_list),
+        float(ui.editScanExposure1.text()), float(ui.editScanGain1.text()))
+
+    def bcScanStart2_clicked():
+
+        LED_list = pickle.load(open("led_pattern2.pkl", "rb"))
+        illumaination.illumination_D.scan_params = LED_list
+        ScanControl.scan_D.load_params2(
+        len(LED_list), float(ui.editScanExposure2.text()), float(ui.editScanGain2.text()))
+
+
+
+    ui.bnScanStart.clicked.connect(bcScanStart_clicked)
+    ui.bnScanStart2.clicked.connect(bcScanStart2_clicked)
+
+    
+    ScanControl.scan_D.scan_start_msg_2_stage.connect(StageMotor.stageMotor_D.start_scan)
+    ScanControl.scan_D.scan_sync_msg_2_stage.connect(StageMotor.stageMotor_D.scan_sync)
+    ScanControl.scan_D.scan_end_msg.connect(StageMotor.stageMotor_D.scan_complete)
+
+    StageMotor.stageMotor_D.scan_ready_msg.connect(ScanControl.scan_D.set_stage_ready)
+    StageMotor.stageMotor_D.sync_ack_msg.connect(ScanControl.scan_D.stage_sync_ack)
+
+    def camera_sync(pth):
+        global obj_cam_operation
+        obj_cam_operation.sync_ack_msg.connect(ScanControl.scan_D.camera_sync_ack)
+        if isGrabbing :
+            obj_cam_operation.scan_sync(pth)
+
+    ScanControl.scan_D.scan_sync_msg_2_camera.connect(camera_sync)
+
+    ScanControl.scan_D.scan_start_msg_2_LED.connect(illumaination.illumination_D.start_scan)
+    ScanControl.scan_D.scan_sync_msg_2_LED.connect(illumaination.illumination_D.scan_sync)
+
 
 
 
