@@ -332,6 +332,13 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="bnLEDSelector">
+          <property name="text">
+           <string>点阵选择器</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
@@ -480,51 +487,6 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupScanControl">
-    <property name="geometry">
-     <rect>
-      <x>710</x>
-      <y>620</y>
-      <width>221</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>联合扫描控制</string>
-    </property>
-    <widget class="QWidget" name="horizontalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>691</width>
-       <height>231</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QGroupBox" name="groupLEDConfig">
-        <property name="title">
-         <string>LED 配置</string>
-        </property>
-        <widget class="QPushButton" name="bnLEDSelector">
-         <property name="geometry">
-          <rect>
-           <x>80</x>
-           <y>80</y>
-           <width>75</width>
-           <height>23</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>点阵选择器</string>
-         </property>
-        </widget>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
@@ -599,7 +561,11 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLineEdit" name="editMotorStep"/>
+         <widget class="QLineEdit" name="editMotorStep">
+          <property name="text">
+           <string>5000</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -612,7 +578,7 @@
       <x>1100</x>
       <y>290</y>
       <width>341</width>
-      <height>471</height>
+      <height>571</height>
      </rect>
     </property>
     <property name="title">
@@ -624,56 +590,77 @@
        <x>0</x>
        <y>10</y>
        <width>331</width>
-       <height>442</height>
+       <height>525</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_6">
+      <item row="2" column="3">
+       <widget class="QLineEdit" name="editScanGain2">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>层切数量</string>
+        </property>
+       </widget>
+      </item>
+      <item row="26" column="1">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>↓</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="Line" name="line_15">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="24" column="1">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>↓取背景</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="Line" name="line_11">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
       <item row="5" column="3">
-       <widget class="QLineEdit" name="lineEdit">
-        <property name="text">
-         <string>-5000</string>
-        </property>
-       </widget>
-      </item>
-      <item row="17" column="3">
-       <widget class="QPushButton" name="bnScanAbort">
-        <property name="text">
-         <string>终止</string>
-        </property>
-       </widget>
-      </item>
-      <item row="23" column="0">
-       <widget class="QLabel" name="label_20">
-        <property name="text">
-         <string>6</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>层切增益</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="3">
-       <widget class="QLineEdit" name="editScanStep">
-        <property name="text">
-         <string>40</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLineEdit" name="editScanExposure2">
-        <property name="text">
-         <string>160000</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <widget class="QLabel" name="label_16">
+       <widget class="QLineEdit" name="editScanGain1">
         <property name="text">
          <string>2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="Line" name="line_12">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="Line" name="line_13">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLineEdit" name="editScanExposure1">
+        <property name="text">
+         <string>80000</string>
         </property>
        </widget>
       </item>
@@ -684,129 +671,129 @@
         </property>
        </widget>
       </item>
-      <item row="19" column="1">
-       <widget class="QPushButton" name="pushButton_2">
-        <property name="text">
-         <string>斜照明扫描（取背景）</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
-       <widget class="QLineEdit" name="editScanGain1">
-        <property name="text">
-         <string>2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="3">
-       <widget class="QLineEdit" name="editScanStepNum">
-        <property name="text">
-         <string>600</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="label_11">
+      <item row="14" column="1">
+       <widget class="QPushButton" name="bnScanBujin1">
         <property name="text">
          <string>步进回</string>
         </property>
        </widget>
       </item>
-      <item row="18" column="1">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>↓取背景</string>
-        </property>
-       </widget>
-      </item>
-      <item row="17" column="1">
-       <widget class="QPushButton" name="bnScanStart">
-        <property name="text">
-         <string>层切扫描</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>↓</string>
-        </property>
-       </widget>
-      </item>
-      <item row="19" column="0">
-       <widget class="QLabel" name="label_18">
-        <property name="text">
-         <string>4</string>
-        </property>
-       </widget>
-      </item>
-      <item row="21" column="1">
-       <widget class="QPushButton" name="pushButton_3">
-        <property name="text">
-         <string>步进回</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="3">
-       <widget class="QPushButton" name="bnScanAbort2">
-        <property name="text">
-         <string>终止2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>层切曝光</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="1">
-       <widget class="QPushButton" name="pushButton">
+      <item row="25" column="0">
+       <widget class="QLabel" name="label_18">
+        <property name="text">
+         <string>5</string>
+        </property>
+       </widget>
+      </item>
+      <item row="25" column="1">
+       <widget class="QPushButton" name="bnScanStart4">
+        <property name="text">
+         <string>斜照明扫描（取背景）</string>
+        </property>
+       </widget>
+      </item>
+      <item row="27" column="1">
+       <widget class="QPushButton" name="bnScanBujin3">
         <property name="text">
          <string>步进回</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>每一次层切步长</string>
+      <item row="3" column="1">
+       <widget class="Line" name="line_10">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="29" column="0">
+       <widget class="QLabel" name="label_20">
+        <property name="text">
+         <string>7</string>
+        </property>
+       </widget>
+      </item>
+      <item row="21" column="1">
+       <widget class="QPushButton" name="bnScanStart">
+        <property name="text">
+         <string>层切扫描</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
        <widget class="QPushButton" name="bnScanStart2">
         <property name="text">
          <string>斜照明扫描</string>
         </property>
        </widget>
       </item>
-      <item row="20" column="1">
-       <widget class="QLabel" name="label_14">
+      <item row="29" column="1">
+       <widget class="QPushButton" name="bnScanStart3">
+        <property name="text">
+         <string>层切扫描（取背景）</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="1">
+       <widget class="QLabel" name="label_10">
         <property name="text">
          <string>↓</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
+      <item row="22" column="1">
+       <widget class="QLabel" name="label_23">
+        <property name="text">
+         <string>↓</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>步进回</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="0">
        <widget class="QLabel" name="label_15">
         <property name="text">
          <string>1      </string>
         </property>
        </widget>
       </item>
-      <item row="3" column="3">
-       <widget class="QLineEdit" name="editScanExposure1">
+      <item row="13" column="1">
+       <widget class="QLabel" name="label_12">
         <property name="text">
-         <string>80000</string>
+         <string>↓</string>
         </property>
        </widget>
       </item>
-      <item row="21" column="0">
-       <widget class="QLabel" name="label_19">
+      <item row="7" column="3">
+       <widget class="QLineEdit" name="editScanBujinStep">
         <property name="text">
-         <string>5</string>
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="21" column="3">
+       <widget class="QPushButton" name="bnScanAbort">
+        <property name="text">
+         <string>终止</string>
+        </property>
+       </widget>
+      </item>
+      <item row="23" column="0">
+       <widget class="QLabel" name="label_22">
+        <property name="text">
+         <string>4</string>
         </property>
        </widget>
       </item>
@@ -817,45 +804,101 @@
         </property>
        </widget>
       </item>
-      <item row="12" column="1">
-       <widget class="QLabel" name="label_10">
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="editScanExposure2">
+        <property name="text">
+         <string>160000</string>
+        </property>
+       </widget>
+      </item>
+      <item row="27" column="0">
+       <widget class="QLabel" name="label_19">
+        <property name="text">
+         <string>6</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>每一次层切步长</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="3">
+       <widget class="QLineEdit" name="editScanStep">
+        <property name="text">
+         <string>40</string>
+        </property>
+       </widget>
+      </item>
+      <item row="23" column="1">
+       <widget class="QPushButton" name="bnScanBujin2">
+        <property name="text">
+         <string>步进回</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="3">
+       <widget class="QLineEdit" name="editScanStepNum">
+        <property name="text">
+         <string>600</string>
+        </property>
+       </widget>
+      </item>
+      <item row="28" column="1">
+       <widget class="QLabel" name="label_21">
         <property name="text">
          <string>↓</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>层切数量</string>
+      <item row="8" column="1">
+       <widget class="Line" name="line_14">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
-       <widget class="QLineEdit" name="editScanGain2">
+      <item row="14" column="0">
+       <widget class="QLabel" name="label_16">
         <property name="text">
-         <string>0</string>
+         <string>2</string>
         </property>
        </widget>
       </item>
-      <item row="23" column="1">
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="text">
-         <string>层切扫描（取背景）</string>
-        </property>
-       </widget>
-      </item>
-      <item row="17" column="0">
+      <item row="21" column="0">
        <widget class="QLabel" name="label_17">
         <property name="text">
          <string>3</string>
         </property>
        </widget>
       </item>
-      <item row="22" column="1">
-       <widget class="QLabel" name="label_21">
+      <item row="5" column="1">
+       <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>↓</string>
+         <string>层切增益</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="3">
+       <widget class="QPushButton" name="bnScanAbort2">
+        <property name="text">
+         <string>终止2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="Line" name="line_16">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="3">
+       <widget class="Line" name="line_17">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>

@@ -523,11 +523,18 @@ if __name__ == "__main__":
 
     ui.bnScanStart.clicked.connect(bcScanStart_clicked)
     ui.bnScanStart2.clicked.connect(bcScanStart2_clicked)
+    ui.bnScanBujin1.clicked.connect(StageMotor.stageMotor_D.move)
+    ui.bnScanBujin2.clicked.connect(StageMotor.stageMotor_D.move)
+    ui.bnScanBujin3.clicked.connect(StageMotor.stageMotor_D.move)
+    ui.bnScanStart3.clicked.connect(bcScanStart_clicked)
+    ui.bnScanStart4.clicked.connect(bcScanStart2_clicked)
+    ui.editScanBujinStep.textChanged.connect(lambda: StageMotor.stageMotor_D.set_step(int(ui.editScanBujinStep.text())))
 
-    
+
     ScanControl.scan_D.scan_start_msg_2_stage.connect(StageMotor.stageMotor_D.start_scan)
     ScanControl.scan_D.scan_sync_msg_2_stage.connect(StageMotor.stageMotor_D.scan_sync)
     ScanControl.scan_D.scan_end_msg.connect(StageMotor.stageMotor_D.scan_complete)
+
 
     StageMotor.stageMotor_D.scan_ready_msg.connect(ScanControl.scan_D.set_stage_ready)
     StageMotor.stageMotor_D.sync_ack_msg.connect(ScanControl.scan_D.stage_sync_ack)
