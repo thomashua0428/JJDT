@@ -305,8 +305,6 @@ class CameraOperation(QObject):
                 cdll.msvcrt.memcpy(byref(self.buf_save_image), stOutFrame.pBufAddr, self.st_frame_info.nFrameLen)
                 self.buf_lock.release()
                 
-                print("get one frame: Width[%d], Height[%d], nFrameNum[%d]"
-                      % (self.st_frame_info.nWidth, self.st_frame_info.nHeight, self.st_frame_info.nFrameNum))
                 # 释放缓存
                 self.obj_cam.MV_CC_FreeImageBuffer(stOutFrame)
 

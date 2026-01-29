@@ -130,11 +130,6 @@ class ScanControlThread(QThread):
             else:
                 continue       
         
-        if  self.ifLED:
-            pass
-        else :
-            self.scan_sync_msg_2_LED.emit()
-            self.msleep(500)
         ### delete the result under res directory
 
 
@@ -148,28 +143,23 @@ class ScanControlThread(QThread):
                     break
                 self.msleep(4)
 
-            if self.ifLED:
-                ### at each position, scan all LEDs
-                for __ in range(self.LED_num):
-                    self.scan_sync_msg_2_LED.emit()
+            ### at each position, scan all LEDs
+            for __ in range(self.LED_num):
 
-                    self.msleep(900)
-                    ### camera trigger
-                    self.camera_ack_flag = False
-                    self.scan_sync_msg_2_camera.emit(f"./res_intensity/pos_{pos}-LED_{__}")
-                    while True:
-                        if  self.camera_ack_flag:
-                            self.camera_ack_flag = False
-                            break
-                        self.msleep(10)
-            else:
+                ### LED trigger
+                self.LED_ack_flag = False
+                self.scan_sync_msg_2_LED.emit()
+                while not self.LED_ack_flag:
+                    self.msleep(5)
+
+                ### camera trigger
                 self.camera_ack_flag = False
-                self.scan_sync_msg_2_camera.emit(f"./res/pos_{pos}-LED_{0}")
-                while True:
-                    if  self.camera_ack_flag:
-                        self.camera_ack_flag = False
-                        break
-                    self.msleep(10)
+                if self.ifLED:
+                    self.scan_sync_msg_2_camera.emit(f"./res_intensity/pos_{pos}-LED_{__}")
+                else:
+                    self.scan_sync_msg_2_camera.emit(f"./res/pos_{pos}-LED_{__}")
+                while not self.camera_ack_flag:
+                    self.msleep(5)
 
 
             print(f"Scanning at position: {pos}")

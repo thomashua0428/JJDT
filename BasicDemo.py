@@ -549,7 +549,7 @@ if __name__ == "__main__":
 
     ScanControl.scan_D.scan_start_msg_2_LED.connect(illumaination.illumination_D.start_scan)
     ScanControl.scan_D.scan_sync_msg_2_LED.connect(illumaination.illumination_D.scan_sync)
-
+    illumaination.illumination_D.LED_set_complete_signal.connect(ScanControl.scan_D.LED_sync_ack)
 
 
 
